@@ -17,20 +17,21 @@ namespace SalesWebMvc.Controllers
 
         public IActionResult About()
         {
-            ViewData["Message"] = "Your application description page.";
+            ViewData["Message"] = "Somos uma equipa de vendedores especializados de diversas áreas tecnológicas.";
 
             return View();
         }
 
         public IActionResult Contact()
         {
-            ViewData["Message"] = "Your contact page.";
+            ViewData["Message"] = "Como chegar até nós.";
 
             return View();
         }
 
         public IActionResult Privacy()
         {
+            ViewData["Message"] = "A presente Política de Privacidade destina-se a ajudá-lo a compreender as informações que recolhemos, o motivo para o fazermos, e como pode atualizar, gerir, exportar e eliminar as suas informações.";
             return View();
         }
 
