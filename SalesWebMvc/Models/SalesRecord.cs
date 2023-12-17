@@ -24,6 +24,5 @@ namespace SalesWebMvc.Models
             Status = status;
             Seller = seller;
         }
-
     }
 }
