@@ -22,5 +22,14 @@ namespace SalesWebMvc.Services
             //retornar todos os vendedores ordenados por nome
             return _context.Seller.ToList();
         }
+
+        //criar um metodo para inserir um novo vendedor na base de dados
+        public void Insert(Seller obj)
+        {
+			//adicionar o objeto ao DBSet
+			_context.Add(obj);
+			//guardar as alteracoes na base de dados
+			_context.SaveChanges();
+		}
     }
 }
