@@ -35,6 +35,7 @@ namespace SalesWebMvc.Controllers
 			return RedirectToAction(nameof(Index));//redirecionar para a acao index
 
 		}
+
 		
 	}
 }
