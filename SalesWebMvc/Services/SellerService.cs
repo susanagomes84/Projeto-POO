@@ -11,23 +11,22 @@ namespace SalesWebMvc.Services
         private readonly SalesWebMvcContext _context;
 
         //criar dependencia para o DBContext
-        public SellerService(SalesWebMvcContext context)
+        public SellerService(SalesWebMvcContext context) //injecao de dependencia
         {
-            _context = context;
+            _context = context; //injecao de dependencia
         }
 
         //criar um metodo para retornar todos os vendedores
-        public List<Seller> FindAll()
+        public List<Seller> FindAll() //retornar uma lista de vendedores
         {
             //retornar todos os vendedores ordenados por nome
-            return _context.Seller.ToList();
+            return _context.Seller.ToList(); 
         }
 
         //criar um metodo para inserir um novo vendedor na base de dados
-        public void Insert(Seller obj)
+        public void Insert(Seller obj) //receber um objeto do tipo seller
         {
-            obj.Department = _context.Department.First();
-			//adicionar o objeto ao DBSet
+           	//adicionar o objeto ao DBSet
 			_context.Add(obj);
 			//guardar as alteracoes na base de dados
 			_context.SaveChanges();
