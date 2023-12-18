@@ -41,6 +41,27 @@ namespace SalesWebMvc.Controllers
 			return RedirectToAction(nameof(Index));//redirecionar para a acao index
 
 		}
+		public IActionResult Delete(int? id)//para receber um id do tipo int
+		{
+			if (id == null)//se o id for nulo
+			{
+				return NotFound();//retornar um erro
+			}
+			var obj = _sellerService.FindById(id.Value);//chamar o metodo findbyid do seller service
+			if (obj == null)//se o objeto for nulo
+			{
+				return NotFound();//retornar um erro
+			}
+			return View(obj);//retornar o objeto
+		}
+
+		[HttpPost]//para indicar que é uma acao post
+		[ValidateAntiForgeryToken]//para evitar ataques CSRF
+		public IActionResult Delete(int id)//para receber um id do tipo int
+		{
+			_sellerService.Remove(id);//chamar o metodo remove do seller service
+			return RedirectToAction(nameof(Index));//redirecionar para a acao index
+		}
 
 		
 	}
