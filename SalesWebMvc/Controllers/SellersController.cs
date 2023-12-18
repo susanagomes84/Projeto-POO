@@ -63,6 +63,20 @@ namespace SalesWebMvc.Controllers
 			return RedirectToAction(nameof(Index));//redirecionar para a acao index
 		}
 
+		public IActionResult Details(int? id)//para receber um id do tipo int
+		{
+			if (id == null)//se o id for nulo
+			{
+				return NotFound();//retornar um erro
+			}
+			var obj = _sellerService.FindById(id.Value);//chamar o metodo findbyid do seller service
+			if (obj == null)//se o objeto for nulo
+			{
+				return NotFound();//retornar um erro
+			}
+			return View(obj);//retornar o objeto
+		}
+
 		
 	}
 }

@@ -42,3 +42,4 @@ D:\LESI_2ANO_POO\TRABALHO_PRATICO\SalesWebMvc\SalesWebMvc\obj\Debug\netcoreapp2.
 D:\LESI_2ANO_POO\TRABALHO_PRATICO\SalesWebMvc\SalesWebMvc\obj\Debug\netcoreapp2.1\Razor\Views\Sellers\Index.cshtml.g.cs
 D:\LESI_2ANO_POO\TRABALHO_PRATICO\SalesWebMvc\SalesWebMvc\obj\Debug\netcoreapp2.1\Razor\Views\Sellers\Create.cshtml.g.cs
 D:\LESI_2ANO_POO\TRABALHO_PRATICO\SalesWebMvc\SalesWebMvc\obj\Debug\netcoreapp2.1\Razor\Views\Sellers\Delete.cshtml.g.cs
+D:\LESI_2ANO_POO\TRABALHO_PRATICO\SalesWebMvc\SalesWebMvc\obj\Debug\netcoreapp2.1\Razor\Views\Sellers\Details.cshtml.g.cs
