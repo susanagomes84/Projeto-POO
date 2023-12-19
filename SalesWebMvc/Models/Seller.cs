@@ -9,8 +9,18 @@ namespace SalesWebMvc.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
+
+        [DataType(DataType.EmailAddress)] //para mudar o tipo de dados na view
         public string Email { get; set; }
+
+        [Display(Name = "Birth Date")] //para mudar o nome da propriedade na view
+        [DataType(DataType.Date)] //para mudar o tipo de dados na view
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")] //para mudar o formato da propriedade na view
         public DateTime BirthDate { get; set; }
+
+        [Display(Name = "Base Salary")] //para mudar o nome da propriedade na view
+
+        [DisplayFormat(DataFormatString = "{0:F2}")] //para mudar o formato da propriedade na view COM DUAS CASAS DECIMAIS
         public double BaseSalary { get; set; }
         public Department Department { get; set; }
 		public int DepartmentId { get; set; }//Foreign Key para garantir que este id vai existir no banco de dados
