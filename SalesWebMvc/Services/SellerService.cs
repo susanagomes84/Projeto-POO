@@ -1,7 +1,8 @@
 ﻿using SalesWebMvc.Models;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;	
+using Microsoft.EntityFrameworkCore;
+using SalesWebMvc.Services.Exceptions;
 
 namespace SalesWebMvc.Services
 {
@@ -49,6 +50,29 @@ namespace SalesWebMvc.Services
 			_context.Seller.Remove(obj);
 			//guardar as alteracoes na base de dados
 			_context.SaveChanges();
+		}
+		//criar um metodo para atualizar um vendedor na base de dados
+		public void Update(Seller obj) //receber um objeto do tipo seller
+		{
+			//se o id do objeto nao existir na base de dados
+			if (!_context.Seller.Any(x => x.Id == obj.Id))
+			{
+				//lançar uma excecao personalizada
+				throw new NotFoundException("Id not found");
+			}
+			try //tentar
+			{
+				//atualizar o objeto no DBSet
+				_context.Update(obj);
+				//guardar as alteracoes na base de dados
+				_context.SaveChanges();
+			}
+			//se houver uma excecao do tipo DbConcurrencyException
+			catch (DbUpdateConcurrencyException e) //excecao a ser lancada pelo framework
+			{
+				//lançar uma excecao personalizada
+				throw new DbConcurrencyException(e.Message);
+			}
 		}
 	}
 }
