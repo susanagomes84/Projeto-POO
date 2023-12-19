@@ -1,6 +1,8 @@
 ﻿using SalesWebMvc.Models;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace SalesWebMvc.Services
@@ -10,11 +12,11 @@ namespace SalesWebMvc.Services
 		private readonly SalesWebMvcContext _context;//como tem de ter uma dependencia ao nosso DBContext, temos de criar uma dependencia para o DBContext
 		public DepartmentService(SalesWebMvcContext context)//criar dependencia para o DBContext
 		{
-			_context = context;
+			_context = context;//injecao de dependencia
 		}
-		public List<Department> FindAll()//retornar todos os departamentos ordenados por nome
+		public async Task<List<Department>> FindAllAsync()//criar um metodo para retornar todos os departamentos da base de dados
 		{
-			return _context.Department.OrderBy(x => x.Name).ToList();//retornar todos os departamentos ordenados por nome
+			return await _context.Department.OrderBy(x => x.Name).ToListAsync();//retornar todos os departamentos da base de dados
 		}
 	}
 }

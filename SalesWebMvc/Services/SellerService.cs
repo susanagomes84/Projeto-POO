@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using SalesWebMvc.Services.Exceptions;
+using System.Threading.Tasks;
 
 namespace SalesWebMvc.Services
 {
@@ -18,44 +19,45 @@ namespace SalesWebMvc.Services
 			_context = context; //injecao de dependencia
 		}
 
-		//criar um metodo para retornar todos os vendedores
-		public List<Seller> FindAll() //retornar uma lista de vendedores
+		
+		public async Task<List<Seller>> FindAllAsync() //criar um metodo para retornar todos os vendedores da base de dados
 		{
-			//retornar todos os vendedores ordenados por nome
-			return _context.Seller.ToList();
+			
+			return await _context.Seller.ToListAsync();//retornar todos os vendedores da base de dados
 		}
 
 		//criar um metodo para inserir um novo vendedor na base de dados
-		public void Insert(Seller obj) //receber um objeto do tipo seller
+		public async Task InsertAsync(Seller obj) //receber um objeto do tipo seller
 		{
 			//adicionar o objeto ao DBSet
 			_context.Add(obj);
 			//guardar as alteracoes na base de dados
-			_context.SaveChanges();
+			await _context.SaveChangesAsync();
 		}
 
-		//criar um metodo para retornar um vendedor pelo id
-		public Seller FindById(int id) //receber um id do tipo int
+		
+		public async Task<Seller> FindByIdAsync(int id) //criar um metodo para retornar um vendedor por id
 		{
-			//retornar o vendedor que tem o id igual ao id recebido
-			return _context.Seller.Include(obj=> obj.Department).FirstOrDefault(obj => obj.Id == id);
+			
+			return await _context.Seller.Include(obj=> obj.Department).FirstOrDefaultAsync(obj => obj.Id == id);//retornar um vendedor por id
 		}
 
-		//criar um metodo para remover um vendedor da base de dados
-		public void Remove(int id) //receber um id do tipo int
+		
+		public async Task RemoveAsync(int id) //criar um metodo para remover um vendedor por id
 		{
-			//criar um objeto do tipo seller que vai receber o vendedor que tem o id igual ao id recebido   
-			var obj = _context.Seller.Find(id);
-			//remover o objeto do DBSet
-			_context.Seller.Remove(obj);
-			//guardar as alteracoes na base de dados
-			_context.SaveChanges();
+			 
+			var obj = await _context.Seller.FindAsync(id);//encontrar o objeto por id
+			
+			_context.Seller.Remove(obj);//remover o objeto do DBSet
+			
+			await _context.SaveChangesAsync();//guardar as alteracoes na base de dados
 		}
-		//criar um metodo para atualizar um vendedor na base de dados
-		public void Update(Seller obj) //receber um objeto do tipo seller
+
+		public async Task UpdateAsync(Seller obj)//	receber um objeto do tipo seller
 		{
+			bool hasAny = await _context.Seller.AnyAsync(x => x.Id == obj.Id);//verificar se existe algum objeto com o id passado como argumento
 			//se o id do objeto nao existir na base de dados
-			if (!_context.Seller.Any(x => x.Id == obj.Id))
+			if (!hasAny) //se nao existir
 			{
 				//lançar uma excecao personalizada
 				throw new NotFoundException("Id not found");
@@ -65,7 +67,7 @@ namespace SalesWebMvc.Services
 				//atualizar o objeto no DBSet
 				_context.Update(obj);
 				//guardar as alteracoes na base de dados
-				_context.SaveChanges();
+				await _context.SaveChangesAsync();
 			}
 			//se houver uma excecao do tipo DbConcurrencyException
 			catch (DbUpdateConcurrencyException e) //excecao a ser lancada pelo framework

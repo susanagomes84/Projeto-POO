@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using SalesWebMvc.Services.Exceptions;
 using System.Diagnostics;
 using System;
+using System.Threading.Tasks;
 
 namespace SalesWebMvc.Controllers
 {
@@ -23,41 +24,41 @@ namespace SalesWebMvc.Controllers
 		}
 
 		//chamar o metodo findall do seller service
-		public IActionResult Index() //criar uma acao para o seller service
+		public async Task<IActionResult> Index() //criar uma acao para o seller service
 		{
-			var list = _sellerService.FindAll(); //chamar o metodo findall do seller service
+			var list = await _sellerService.FindAllAsync(); //chamar o metodo findall do seller service
 			return View(list); //retornar a lista
 		}
 
-		public IActionResult Create() //criar uma acao para o seller service
+		public async Task<IActionResult> Create() //criar uma acao para o seller service
 		{
-			var departments = _departmentService.FindAll(); //chamar o metodo findall do department service
+			var departments = await _departmentService.FindAllAsync(); //chamar o metodo findall do department service
 			var viewModel = new SellerFormViewModel { Departments = departments }; //instanciar um objeto do tipo SellerFormViewModel
 			return View(viewModel); //retornar a lista
 		}
 		//criar acao create post
 		[HttpPost]//para indicar que é uma acao post
 		[ValidateAntiForgeryToken]//para evitar ataques CSRF
-		public IActionResult Create(Seller seller)//para receber um objeto do tipo seller
+		public async Task<IActionResult> Create(Seller seller)//para receber um objeto do tipo seller
 		{
 			if (!ModelState.IsValid)//se o modelo nao for valido
 			{
-				var departments = _departmentService.FindAll();//chamar o metodo findall do department service
+				var departments = await _departmentService.FindAllAsync();//chamar o metodo findall do department service
 				var viewModel = new SellerFormViewModel { Seller = seller, Departments = departments };//instanciar um objeto do tipo SellerFormViewModel
 				return View(viewModel);//retornar o objeto
 			}
 
-			_sellerService.Insert(seller);//chamar o metodo insert do seller service
+			await _sellerService.InsertAsync(seller);//chamar o metodo insert do seller service
 			return RedirectToAction(nameof(Index));//redirecionar para a acao index
 
 		}
-		public IActionResult Delete(int? id)//para receber um id do tipo int
+		public async Task<IActionResult> Delete(int? id)//para receber um id do tipo int
 		{
 			if (id == null)//se o id for nulo
 			{
 				return RedirectToAction(nameof(Error), new { message = "Id not provided."});//retornar um erro
 			}
-			var obj = _sellerService.FindById(id.Value);//chamar o metodo findbyid do seller service
+			var obj = await _sellerService.FindByIdAsync(id.Value);//chamar o metodo findbyid do seller service
 			if (obj == null)//se o objeto for nulo
 			{
 				return RedirectToAction(nameof(Error), new { message = "Id not Found" });//retornar um err
@@ -67,19 +68,19 @@ namespace SalesWebMvc.Controllers
 
 		[HttpPost]//para indicar que é uma acao post
 		[ValidateAntiForgeryToken]//para evitar ataques CSRF
-		public IActionResult Delete(int id)//para receber um id do tipo int
+		public async Task<IActionResult> Delete(int id)//para receber um id do tipo int
 		{
-			_sellerService.Remove(id);//chamar o metodo remove do seller service
+			await _sellerService.RemoveAsync(id);//chamar o metodo remove do seller service
 			return RedirectToAction(nameof(Index));//redirecionar para a acao index
 		}
 
-		public IActionResult Details(int? id)//para receber um id do tipo int
+		public async Task<IActionResult> Details(int? id)//para receber um id do tipo int opcional
 		{
 			if (id == null)//se o id for nulo
 			{
 				return RedirectToAction(nameof(Error), new { message = "Id not provided." });//retornar um err
 			}
-			var obj = _sellerService.FindById(id.Value);//chamar o metodo findbyid do seller service
+			var obj = await _sellerService.FindByIdAsync(id.Value);//chamar o metodo findbyid do seller service
 			if (obj == null)//se o objeto for nulo
 			{
 				return RedirectToAction(nameof(Error), new { message = "Id not Found" });//retornar um err
@@ -87,18 +88,18 @@ namespace SalesWebMvc.Controllers
 			return View(obj);//retornar o objeto
 		}
 		//criar acao edit
-		public IActionResult Edit(int? id)//para receber um id do tipo int opcional
+		public async Task<IActionResult> Edit(int? id)//para receber um id do tipo int opcional
 		{
 			if (id == null)//se o id for nulo
 			{
 				return RedirectToAction(nameof(Error), new { message = "Id not provided." });//retornar um err
 			}
-			var obj = _sellerService.FindById(id.Value);//chamar o metodo findbyid do seller service
+			var obj = await _sellerService.FindByIdAsync(id.Value);//chamar o metodo findbyid do seller service
 			if (obj == null)//se o objeto for nulo
 			{
 				return RedirectToAction(nameof(Error), new { message = "Id not Found" });//retornar um err
 			}
-			List<Department> departments = _departmentService.FindAll();//chamar o metodo findall do department service
+			List<Department> departments = await _departmentService.FindAllAsync();//chamar o metodo findall do department service
 			SellerFormViewModel viewModel = new SellerFormViewModel { Seller = obj, Departments = departments }; //instanciar um objeto do tipo SellerFormViewModel
 			return View(viewModel);//retornar o objeto
 		}
@@ -106,22 +107,22 @@ namespace SalesWebMvc.Controllers
 		[HttpPost]//para indicar que é uma acao post
 		[ValidateAntiForgeryToken]//para evitar ataques CSRF
 		//criar acao edit post
-		public IActionResult Edit(int id, Seller seller)//para receber um id do tipo int e um objeto do tipo seller
+		public async Task<IActionResult> Edit(int id, Seller seller)//para receber um id do tipo int e um objeto do tipo seller
 		{
 			if (!ModelState.IsValid)//se o modelo nao for valido
 			{
-				var departments = _departmentService.FindAll();//chamar o metodo findall do department service
+				var departments = await _departmentService.FindAllAsync();//chamar o metodo findall do department service
 				var viewModel = new SellerFormViewModel { Seller = seller, Departments = departments };//instanciar um objeto do tipo SellerFormViewModel
 				return View(viewModel);//retornar o objeto
 			}
 
 			if (id != seller.Id)//se o id for diferente do id do vendedor
 			{
-				return RedirectToAction(nameof(Error), new { message = "Id mismatch." });//retornar um err
+				return RedirectToAction(nameof(Error), new { message = "Id mismatch." });//retornar um erro
 			}
 			try//tentar
 			{
-				_sellerService.Update(seller);//chamar o metodo update do seller service
+				await _sellerService.UpdateAsync(seller);//chamar o metodo update do seller service
 				return RedirectToAction(nameof(Index));//redirecionar para a acao index
 			}
 			catch (ApplicationException e)//se houver uma excecao do tipo NotFoundException
@@ -130,7 +131,7 @@ namespace SalesWebMvc.Controllers
 			}
 			
 		}
-		//criar acao error
+		//criar acao error não precisa de ser assincrona porque nao vai aceder à base de dados
 		public IActionResult Error(string message)//para receber uma mensagem do tipo string
 		{
 			var viewModel = new ErrorViewModel //instanciar um objeto do tipo ErrorViewModel
