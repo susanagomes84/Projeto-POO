@@ -70,8 +70,15 @@ namespace SalesWebMvc.Controllers
 		[ValidateAntiForgeryToken]//para evitar ataques CSRF
 		public async Task<IActionResult> Delete(int id)//para receber um id do tipo int
 		{
-			await _sellerService.RemoveAsync(id);//chamar o metodo remove do seller service
-			return RedirectToAction(nameof(Index));//redirecionar para a acao index
+			try
+			{
+				await _sellerService.RemoveAsync(id);//chamar o metodo remove do seller service
+				return RedirectToAction(nameof(Index));//redirecionar para a acao index
+			}
+			catch (IntegrityException e)//se houver uma excecao do tipo NotFoundException
+			{
+				return RedirectToAction(nameof(Error), new { message = e.Message });//retornar para pagina de erro com a mensagem
+			}
 		}
 
 		public async Task<IActionResult> Details(int? id)//para receber um id do tipo int opcional

@@ -42,15 +42,22 @@ namespace SalesWebMvc.Services
 			return await _context.Seller.Include(obj=> obj.Department).FirstOrDefaultAsync(obj => obj.Id == id);//retornar um vendedor por id
 		}
 
-		
+
 		public async Task RemoveAsync(int id) //criar um metodo para remover um vendedor por id
 		{
-			 
+			try 
+			{ 
 			var obj = await _context.Seller.FindAsync(id);//encontrar o objeto por id
-			
+
 			_context.Seller.Remove(obj);//remover o objeto do DBSet
-			
+
 			await _context.SaveChangesAsync();//guardar as alteracoes na base de dados
+			}
+			catch (DbUpdateException e) //excecao a ser lancada pelo framework
+			{
+				//lançar uma excecao personalizada
+				throw new IntegrityException(e.Message);
+			}
 		}
 
 		public async Task UpdateAsync(Seller obj)//	receber um objeto do tipo seller
