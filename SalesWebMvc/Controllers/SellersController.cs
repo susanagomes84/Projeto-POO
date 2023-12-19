@@ -40,6 +40,12 @@ namespace SalesWebMvc.Controllers
 		[ValidateAntiForgeryToken]//para evitar ataques CSRF
 		public IActionResult Create(Seller seller)//para receber um objeto do tipo seller
 		{
+			if (!ModelState.IsValid)//se o modelo nao for valido
+			{
+				var departments = _departmentService.FindAll();//chamar o metodo findall do department service
+				var viewModel = new SellerFormViewModel { Seller = seller, Departments = departments };//instanciar um objeto do tipo SellerFormViewModel
+				return View(viewModel);//retornar o objeto
+			}
 
 			_sellerService.Insert(seller);//chamar o metodo insert do seller service
 			return RedirectToAction(nameof(Index));//redirecionar para a acao index
@@ -102,6 +108,13 @@ namespace SalesWebMvc.Controllers
 		//criar acao edit post
 		public IActionResult Edit(int id, Seller seller)//para receber um id do tipo int e um objeto do tipo seller
 		{
+			if (!ModelState.IsValid)//se o modelo nao for valido
+			{
+				var departments = _departmentService.FindAll();//chamar o metodo findall do department service
+				var viewModel = new SellerFormViewModel { Seller = seller, Departments = departments };//instanciar um objeto do tipo SellerFormViewModel
+				return View(viewModel);//retornar o objeto
+			}
+
 			if (id != seller.Id)//se o id for diferente do id do vendedor
 			{
 				return RedirectToAction(nameof(Error), new { message = "Id mismatch." });//retornar um err

@@ -8,20 +8,28 @@ namespace SalesWebMvc.Models
     public class Seller
     {
         public int Id { get; set; }
+
+        [Required(ErrorMessage = "{0} required")] //para tornar a propriedade obrigatória
+        [StringLength(60, MinimumLength = 3, ErrorMessage = "{0} size should be between {2} and {1}")] //para definir o tamanho da propriedade
         public string Name { get; set; }
 
         [DataType(DataType.EmailAddress)] //para mudar o tipo de dados na view
+        [Required(ErrorMessage = "{0} required")] //para tornar a propriedade obrigatória
+        [EmailAddress(ErrorMessage = "Enter a valid email")] //para validar o email
         public string Email { get; set; }
 
+        [Required(ErrorMessage = "{0} required")] //para tornar a propriedade obrigatória
         [Display(Name = "Birth Date")] //para mudar o nome da propriedade na view
         [DataType(DataType.Date)] //para mudar o tipo de dados na view
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")] //para mudar o formato da propriedade na view
         public DateTime BirthDate { get; set; }
 
+        [Required(ErrorMessage = "{0} required")] //para tornar a propriedade obrigatória
+        [Range(100.0, 50000.0, ErrorMessage = "{0} must be from {1} to {2}")] //para definir o intervalo da propriedade
         [Display(Name = "Base Salary")] //para mudar o nome da propriedade na view
-
         [DisplayFormat(DataFormatString = "{0:F2}")] //para mudar o formato da propriedade na view COM DUAS CASAS DECIMAIS
         public double BaseSalary { get; set; }
+
         public Department Department { get; set; }
 		public int DepartmentId { get; set; }//Foreign Key para garantir que este id vai existir no banco de dados
 
