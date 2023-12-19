@@ -4,6 +4,8 @@ using SalesWebMvc.Models;
 using SalesWebMvc.Models.ViewModels;
 using System.Collections.Generic;
 using SalesWebMvc.Services.Exceptions;
+using System.Diagnostics;
+using System;
 
 namespace SalesWebMvc.Controllers
 {
@@ -47,12 +49,12 @@ namespace SalesWebMvc.Controllers
 		{
 			if (id == null)//se o id for nulo
 			{
-				return NotFound();//retornar um erro
+				return RedirectToAction(nameof(Error), new { message = "Id not provided."});//retornar um erro
 			}
 			var obj = _sellerService.FindById(id.Value);//chamar o metodo findbyid do seller service
 			if (obj == null)//se o objeto for nulo
 			{
-				return NotFound();//retornar um erro
+				return RedirectToAction(nameof(Error), new { message = "Id not Found" });//retornar um err
 			}
 			return View(obj);//retornar o objeto
 		}
@@ -69,12 +71,12 @@ namespace SalesWebMvc.Controllers
 		{
 			if (id == null)//se o id for nulo
 			{
-				return NotFound();//retornar um erro
+				return RedirectToAction(nameof(Error), new { message = "Id not provided." });//retornar um err
 			}
 			var obj = _sellerService.FindById(id.Value);//chamar o metodo findbyid do seller service
 			if (obj == null)//se o objeto for nulo
 			{
-				return NotFound();//retornar um erro
+				return RedirectToAction(nameof(Error), new { message = "Id not Found" });//retornar um err
 			}
 			return View(obj);//retornar o objeto
 		}
@@ -83,12 +85,12 @@ namespace SalesWebMvc.Controllers
 		{
 			if (id == null)//se o id for nulo
 			{
-				return NotFound();//retornar um erro
+				return RedirectToAction(nameof(Error), new { message = "Id not provided." });//retornar um err
 			}
 			var obj = _sellerService.FindById(id.Value);//chamar o metodo findbyid do seller service
 			if (obj == null)//se o objeto for nulo
 			{
-				return NotFound();//retornar um erro
+				return RedirectToAction(nameof(Error), new { message = "Id not Found" });//retornar um err
 			}
 			List<Department> departments = _departmentService.FindAll();//chamar o metodo findall do department service
 			SellerFormViewModel viewModel = new SellerFormViewModel { Seller = obj, Departments = departments }; //instanciar um objeto do tipo SellerFormViewModel
@@ -102,22 +104,28 @@ namespace SalesWebMvc.Controllers
 		{
 			if (id != seller.Id)//se o id for diferente do id do vendedor
 			{
-				return BadRequest();//retornar um erro
+				return RedirectToAction(nameof(Error), new { message = "Id mismatch." });//retornar um err
 			}
 			try//tentar
 			{
 				_sellerService.Update(seller);//chamar o metodo update do seller service
 				return RedirectToAction(nameof(Index));//redirecionar para a acao index
 			}
-			catch (NotFoundException e)//se houver uma excecao do tipo NotFoundException
+			catch (ApplicationException e)//se houver uma excecao do tipo NotFoundException
 			{
-				return NotFound();//retornar um erro
+				return RedirectToAction(nameof(Error), new { message = e.Message});//retornar um erro
 			}
-			catch (DbConcurrencyException e)//se houver uma excecao do tipo DbConcurrencyException
-			{
-				return BadRequest();//retornar um erro
-			}
+			
 		}
-
+		//criar acao error
+		public IActionResult Error(string message)//para receber uma mensagem do tipo string
+		{
+			var viewModel = new ErrorViewModel //instanciar um objeto do tipo ErrorViewModel
+			{
+				Message = message,//atribuir a mensagem
+				RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier //atribuir o id interno do pedido
+			};
+			return View(viewModel);//retornar o objeto
+		}
 	}
 }
